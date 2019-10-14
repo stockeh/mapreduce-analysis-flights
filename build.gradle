@@ -1,0 +1,18 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+  compile (
+  	[group: 'org.apache.hadoop', name: 'hadoop-mapreduce-client-core', version: '3.1.2'],
+  	[group: 'org.apache.hadoop', name: 'hadoop-common', version: '3.1.2']
+  	)
+}
+
+jar {
+  from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+}
+
+ext.hadoopVersion = "3.1.2"
