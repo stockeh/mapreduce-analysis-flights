@@ -29,7 +29,7 @@ EOF
 
 function hadoop_runner {
 $HADOOP_HOME/bin/hadoop fs -rm -R ${OUT_DIR}/${CLASS_JOB} ||: \
-&& $HADOOP_HOME/bin/hadoop jar build/libs/${JAR_FILE} cs555.hadoop.${CLASS_JOB}.MainJob \
+&& $HADOOP_HOME/bin/hadoop jar build/libs/${JAR_FILE} cs555.hadoop.${CLASS_JOB}.Driver \
 $FIRST_INPUT $SECOND_INPUT ${OUT_DIR}/${CLASS_JOB} \
 && $HADOOP_HOME/bin/hadoop fs -ls ${OUT_DIR}/${CLASS_JOB} \
 && $HADOOP_HOME/bin/hadoop fs -head ${OUT_DIR}/${CLASS_JOB}/part-r-00000
@@ -59,12 +59,13 @@ else
     OUT_DIR="/out"
 fi
 
-FIRST_INPUT="/"${HDFS_DATA}"/metadata/*.csv"
-SECOND_INPUT="/${HDFS_DATA}/analysis/*.csv"
+FIRST_INPUT="/"${HDFS_DATA}"/main/*.csv"
+SECOND_INPUT="/${HDFS_DATA}/supplementary/"
 
 case "$1" in
     
--1) CLASS_JOB="basic"
+-1) CLASS_JOB="time"
+    SECOND_INPUT=""
     hadoop_runner
     ;;
     

@@ -1,4 +1,4 @@
-package cs455.hadoop.basic;
+package cs555.hadoop.time;
 
 import java.io.IOException;
 import org.apache.hadoop.conf.Configuration;
@@ -20,7 +20,7 @@ import org.apache.hadoop.util.ToolRunner;
  * @author stock
  * 
  */
-public class MainJob {
+public class Driver {
 
   /**
    * Only a single job is used for this class.
@@ -50,22 +50,21 @@ public class MainJob {
         throws IOException, ClassNotFoundException, InterruptedException {
 
       Job job = Job.getInstance( conf, "Initial Analysis - Job 1" );
-      job.setJarByClass( MainJob.class );
-      job.setNumReduceTasks( 1 );
+      job.setJarByClass( Driver.class );
+      // job.setNumReduceTasks( 1 );
 
       job.setMapOutputKeyClass( Text.class );
-      job.setMapOutputValueClass( Text.class );
+      job.setMapOutputValueClass( DoubleWritable.class );
+
       job.setOutputKeyClass( Text.class );
       job.setOutputValueClass( DoubleWritable.class );
 
       MultipleInputs.addInputPath( job, new Path( args[ 0 ] ),
-          TextInputFormat.class, MetadataMap.class );
-      MultipleInputs.addInputPath( job, new Path( args[ 1 ] ),
-          TextInputFormat.class, AnalysisMap.class );
+          TextInputFormat.class, Map.class );
 
-      job.setReducerClass( MainReducer.class );
+      job.setReducerClass( Reduce.class );
 
-      FileOutputFormat.setOutputPath( job, new Path( args[ 2 ] ) );
+      FileOutputFormat.setOutputPath( job, new Path( args[ 1 ] ) );
 
       return job.waitForCompletion( true ) ? 0 : 1;
     }
@@ -81,7 +80,7 @@ public class MainJob {
     {
       System.out.println( args[ i ] );
     }
-    if ( args.length != 3 )
+    if ( args.length != 2 )
     {
       System.err.println( "Invalid Argument Configurations - add / remove" );
       System.exit( 0 );
