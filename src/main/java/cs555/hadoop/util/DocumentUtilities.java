@@ -1,4 +1,4 @@
-package cs455.hadoop.util;
+package cs555.hadoop.util;
 
 import java.util.ArrayList;
 
