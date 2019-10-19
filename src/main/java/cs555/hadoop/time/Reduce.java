@@ -4,6 +4,7 @@ import java.io.IOException;
 import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
+import cs555.hadoop.util.Constants;
 
 /**
  * Reducer class that takes the output from the mapper and organizes
@@ -15,22 +16,22 @@ import org.apache.hadoop.mapreduce.Reducer;
 public class Reduce
     extends Reducer<Text, DoubleWritable, Text, DoubleWritable> {
 
-  private static Text maxTime = new Text();
+  private final static Text maxTime = new Text();
   private static double maxTimeVal;
 
-  private static Text minTime = new Text();
+  private final static Text minTime = new Text();
   private static double minTimeVal = Double.MAX_VALUE;
 
-  private static Text maxWeek = new Text();
+  private final static Text maxWeek = new Text();
   private static double maxWeekVal;
 
-  private static Text minWeek = new Text();
+  private final static Text minWeek = new Text();
   private static double minWeekVal = Double.MAX_VALUE;
 
-  private static Text maxMonth = new Text();
+  private final static Text maxMonth = new Text();
   private static double maxMonthVal;
 
-  private static Text minMonth = new Text();
+  private final static Text minMonth = new Text();
   private static double minMonthVal = Double.MAX_VALUE;
 
   /**
@@ -50,7 +51,7 @@ public class Reduce
     total /= count;
     switch ( key.toString().split( "\t" )[ 0 ] )
     {
-      case "TIME" :
+      case Constants.TIME :
         if ( total > maxTimeVal )
         {
           maxTimeVal = total;
@@ -63,7 +64,7 @@ public class Reduce
         }
         break;
 
-      case "WEEK" :
+      case Constants.WEEK :
         if ( total > maxWeekVal )
         {
           maxWeekVal = total;
@@ -76,7 +77,7 @@ public class Reduce
         }
         break;
 
-      case "MONTH" :
+      case Constants.MONTH :
         if ( total > maxMonthVal )
         {
           maxMonthVal = total;
@@ -106,7 +107,7 @@ public class Reduce
     context.write( minTime, new DoubleWritable( minTimeVal ) );
     context.write( minWeek, new DoubleWritable( minWeekVal ) );
     context.write( minMonth, new DoubleWritable( minMonthVal ) );
-    
+
     context.write( new Text( "\n----Q2. WORST TIME TO MINIMIZE DELAYS" ),
         new DoubleWritable() );
     context.write( maxTime, new DoubleWritable( maxTimeVal ) );

@@ -14,9 +14,10 @@ JAR_FILE="mapreduce-analysis-flights.jar"
 function usage {
 cat << EOF
     
-    Usage: run.sh -[ 1 ] -c -s
+    Usage: run.sh -[ 1 | 2 ] -c -s
 
     -1 : Basic Questions
+    -2 : Hub Questions
     
     -c : Compile
     -s : Shared HDFS
@@ -66,6 +67,11 @@ case "$1" in
     
 -1) CLASS_JOB="time"
     SECOND_INPUT=""
+    hadoop_runner
+    ;;
+    
+-2) CLASS_JOB="hubs"
+    SECOND_INPUT+="airports.csv"
     hadoop_runner
     ;;
     

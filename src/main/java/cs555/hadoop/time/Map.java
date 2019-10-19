@@ -6,6 +6,7 @@ import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
+import cs555.hadoop.util.Constants;
 import cs555.hadoop.util.DocumentUtilities;
 
 /**
@@ -40,7 +41,7 @@ public class Map extends Mapper<LongWritable, Text, Text, DoubleWritable> {
     if ( tmp.length() > 0 )
     {
       sb.setLength( 0 );
-      sb.append( "TIME\t" ).append( tmp );
+      sb.append( Constants.TIME ).append( "\t" ).append( tmp );
       keyText.set( sb.toString() );
       context.write( keyText, val );
     }
@@ -49,7 +50,7 @@ public class Map extends Mapper<LongWritable, Text, Text, DoubleWritable> {
     if ( tmp.length() > 0 )
     {
       sb.setLength( 0 );
-      sb.append( "WEEK\t" ).append( tmp );
+      sb.append( Constants.WEEK ).append( "\t" ).append( tmp );
       keyText.set( sb.toString() );
       context.write( keyText, val );
     }
@@ -58,7 +59,7 @@ public class Map extends Mapper<LongWritable, Text, Text, DoubleWritable> {
     if ( tmp.length() > 0 )
     {
       sb.setLength( 0 );
-      sb.append( "MONTH\t" ).append( tmp );
+      sb.append( Constants.MONTH ).append( "\t" ).append( tmp );
       keyText.set( sb.toString() );
       context.write( keyText, val );
     }
