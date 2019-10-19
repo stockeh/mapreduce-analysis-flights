@@ -23,13 +23,13 @@ public class DocumentUtilities {
     {
       if ( s.charAt( i ) == ',' && notInsideComma )
       {
-        words.add( s.substring( start, i ) );
+        words.add( s.substring( start, i ).replace( "\"", "" ).trim() );
         start = i + 1;
       } else if ( s.charAt( i ) == '"' )
         notInsideComma = !notInsideComma;
     }
 
-    words.add( s.substring( start ) );
+    words.add( s.substring( start ).replace( "\"", "" ).trim() );
 
     return words;
   }
