@@ -1,7 +1,6 @@
 package cs555.hadoop.hubs;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -10,6 +9,7 @@ import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 import cs555.hadoop.util.Constants;
+import cs555.hadoop.util.DocumentUtilities;
 
 /**
  * Reducer class that takes the output from the mapper and organizes
@@ -22,7 +22,8 @@ public class Reduce extends Reducer<Text, Text, Text, DoubleWritable> {
 
   private final static TreeMap<Integer, String> globalTop = new TreeMap<>();
 
-  private final static Map<String, Integer> years = new HashMap<>();
+  private final static TreeMap<String, Map<String, Integer>> years =
+      new TreeMap<>();
 
   private final StringBuilder sb = new StringBuilder();
 
@@ -33,19 +34,33 @@ public class Reduce extends Reducer<Text, Text, Text, DoubleWritable> {
   protected void reduce(Text key, Iterable<Text> values, Context context)
       throws IOException, InterruptedException {
     int count = 0;
-    String airport = null, year;
+    String airport = null, year, id = "";
     String[] split;
     for ( Text t : values )
     {
       split = t.toString().split( "\t" );
-      // context.write( new Text( key.toString() + " " + t.toString() ),
-      // new DoubleWritable( 0 ) );
       switch ( split[ 0 ] )
       {
         case Constants.DATA :
-          // year = split[ 1 ];
-          // int c = years.containsKey( year ) ? years.get( year ) : 0;
-          // years.put( year, c + 1 );
+          year = split[ 1 ];
+
+          Map<String, Integer> hubs = years.get( year );
+          if ( hubs == null )
+          {
+            hubs = new HashMap<>();
+            years.put( year, hubs );
+          }
+          if ( airport == null )
+          {
+            hubs.merge( key.toString(), 1, Integer::sum );
+          } else if ( hubs.containsKey( key.toString() ) )
+          {
+            hubs.put( id, hubs.remove( key.toString() ) );
+            hubs.merge( id, 1, Integer::sum );
+          } else
+          {
+            hubs.merge( id, 1, Integer::sum );
+          }
           ++count;
           break;
 
@@ -53,13 +68,14 @@ public class Reduce extends Reducer<Text, Text, Text, DoubleWritable> {
           if ( airport == null )
           {
             airport = split[ 1 ];
-            sb.append( key.toString() ).append( "\t" ).append( airport );
+            id = sb.append( key.toString() ).append( "\t" ).append( airport )
+                .toString();
+            sb.setLength( 0 );
           }
           break;
       }
     }
-    globalTop.put( count, sb.toString() );
-    sb.setLength( 0 );
+    globalTop.put( count, id );
 
     if ( globalTop.size() > 10 )
     {
@@ -77,7 +93,7 @@ public class Reduce extends Reducer<Text, Text, Text, DoubleWritable> {
   @Override
   protected void cleanup(Context context)
       throws IOException, InterruptedException {
-    context.write( new Text( "\n----Q3. TOP BUSIEST DOMESTIC AIRPORTS" ),
+    context.write( new Text( "\n----Q3. GLOBAL BUSIEST DOMESTIC AIRPORTS" ),
         new DoubleWritable() );
 
     for ( Entry<Integer, String> e : globalTop.descendingMap().entrySet() )
@@ -85,14 +101,26 @@ public class Reduce extends Reducer<Text, Text, Text, DoubleWritable> {
       context.write( new Text( e.getValue() ),
           new DoubleWritable( e.getKey() ) );
     }
-
     context.write( new Text( "\n----    BUSIEST DOMESTIC AIRPORTS OVER TIME" ),
         new DoubleWritable() );
-
-    for ( Entry<String, Integer> e : years.entrySet() )
+    for ( Entry<String, Map<String, Integer>> e : years.entrySet() )
     {
-      context.write( new Text( e.getKey() ),
-          new DoubleWritable( e.getValue() ) );
+      int i = 0;
+      for ( Entry<String, Integer> hubs : DocumentUtilities
+          .sortMapByValue( e.getValue(), true ).entrySet() )
+      {
+        sb.setLength( 0 );
+        if ( i++ < 10 )
+        {
+          context.write(
+              new Text( sb.append( e.getKey() ).append( "\t" )
+                  .append( hubs.getKey() ).toString() ),
+              new DoubleWritable( hubs.getValue() ) );
+        } else
+        {
+          break;
+        }
+      }
     }
   }
 }

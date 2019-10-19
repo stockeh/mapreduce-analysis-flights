@@ -37,7 +37,7 @@ public class MapAirports extends Mapper<LongWritable, Text, Text, Text> {
       String airport = line.get( 1 );
 
       sb.append( Constants.AIRPORTS ).append( "\t" )
-          .append( airport.length() > 0 ? airport : "---" );
+          .append( airport.length() > 0 ? airport : "airport" );
 
       keyText.set( iata );
       val.set( sb.toString() );
