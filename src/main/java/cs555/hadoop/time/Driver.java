@@ -51,7 +51,7 @@ public class Driver {
 
       Job job = Job.getInstance( conf, "Initial Analysis - Job 1" );
       job.setJarByClass( Driver.class );
-      // job.setNumReduceTasks( 1 );
+      job.setNumReduceTasks( 1 );
 
       job.setMapOutputKeyClass( Text.class );
       job.setMapOutputValueClass( DoubleWritable.class );
