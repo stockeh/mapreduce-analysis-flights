@@ -51,7 +51,7 @@ public class Driver {
 
       Job job = Job.getInstance( conf, "Initial Analysis - Job 1" );
       job.setJarByClass( Driver.class );
-      job.setNumReduceTasks( 1 );
+      job.setNumReduceTasks( 3 );
 
       job.setMapOutputKeyClass( Text.class );
       job.setMapOutputValueClass( DoubleWritable.class );
@@ -62,6 +62,7 @@ public class Driver {
       MultipleInputs.addInputPath( job, new Path( args[ 0 ] ),
           TextInputFormat.class, Map.class );
 
+      job.setPartitionerClass( CustomPartitioner.class );
       job.setReducerClass( Reduce.class );
 
       FileOutputFormat.setOutputPath( job, new Path( args[ 1 ] ) );

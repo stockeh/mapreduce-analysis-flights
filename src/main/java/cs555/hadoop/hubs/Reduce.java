@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
-import org.apache.hadoop.io.DoubleWritable;
+import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 import cs555.hadoop.util.Constants;
@@ -18,12 +18,11 @@ import cs555.hadoop.util.DocumentUtilities;
  * @author stock
  *
  */
-public class Reduce extends Reducer<Text, Text, Text, DoubleWritable> {
+public class Reduce extends Reducer<Text, Text, Text, IntWritable> {
 
-  private final static TreeMap<Integer, String> globalTop = new TreeMap<>();
+  private final TreeMap<Integer, String> globalTop = new TreeMap<>();
 
-  private final static TreeMap<String, Map<String, Integer>> years =
-      new TreeMap<>();
+  private final TreeMap<String, Map<String, Integer>> years = new TreeMap<>();
 
   private final StringBuilder sb = new StringBuilder();
 
@@ -33,7 +32,7 @@ public class Reduce extends Reducer<Text, Text, Text, DoubleWritable> {
   @Override
   protected void reduce(Text key, Iterable<Text> values, Context context)
       throws IOException, InterruptedException {
-    int count = 0;
+    int count, total = 0;
     String airport = null, year, id = "";
     String[] split;
     for ( Text t : values )
@@ -43,7 +42,8 @@ public class Reduce extends Reducer<Text, Text, Text, DoubleWritable> {
       {
         case Constants.DATA :
           year = split[ 1 ];
-
+          count = DocumentUtilities.parseInt( split[ 2 ] );
+          total += count;
           Map<String, Integer> hubs = years.get( year );
           if ( hubs == null )
           {
@@ -52,16 +52,15 @@ public class Reduce extends Reducer<Text, Text, Text, DoubleWritable> {
           }
           if ( airport == null )
           {
-            hubs.merge( key.toString(), 1, Integer::sum );
+            hubs.put( key.toString(),
+                hubs.getOrDefault( key.toString(), 0 ) + count );
           } else if ( hubs.containsKey( key.toString() ) )
           {
             hubs.put( id, hubs.remove( key.toString() ) );
-            hubs.merge( id, 1, Integer::sum );
           } else
           {
-            hubs.merge( id, 1, Integer::sum );
+            hubs.put( id, hubs.getOrDefault( id, 0 ) + count );
           }
-          ++count;
           break;
 
         case Constants.AIRPORTS :
@@ -75,7 +74,7 @@ public class Reduce extends Reducer<Text, Text, Text, DoubleWritable> {
           break;
       }
     }
-    globalTop.put( count, id );
+    globalTop.put( total, id );
 
     if ( globalTop.size() > 10 )
     {
@@ -94,15 +93,14 @@ public class Reduce extends Reducer<Text, Text, Text, DoubleWritable> {
   protected void cleanup(Context context)
       throws IOException, InterruptedException {
     context.write( new Text( "\n----Q3. GLOBAL BUSIEST DOMESTIC AIRPORTS" ),
-        new DoubleWritable() );
+        new IntWritable() );
 
     for ( Entry<Integer, String> e : globalTop.descendingMap().entrySet() )
     {
-      context.write( new Text( e.getValue() ),
-          new DoubleWritable( e.getKey() ) );
+      context.write( new Text( e.getValue() ), new IntWritable( e.getKey() ) );
     }
     context.write( new Text( "\n----    BUSIEST DOMESTIC AIRPORTS OVER TIME" ),
-        new DoubleWritable() );
+        new IntWritable() );
     for ( Entry<String, Map<String, Integer>> e : years.entrySet() )
     {
       int i = 0;
@@ -115,7 +113,7 @@ public class Reduce extends Reducer<Text, Text, Text, DoubleWritable> {
           context.write(
               new Text( sb.append( e.getKey() ).append( "\t" )
                   .append( hubs.getKey() ).toString() ),
-              new DoubleWritable( hubs.getValue() ) );
+              new IntWritable( hubs.getValue() ) );
         } else
         {
           break;

@@ -23,7 +23,7 @@ public class MapAirports extends Mapper<LongWritable, Text, Text, Text> {
   private final StringBuilder sb = new StringBuilder();
 
   /**
-   * 
+   * k: iata, v: AIRPORTS   airport_name
    */
   @Override
   protected void map(LongWritable key, Text value, Context context)
