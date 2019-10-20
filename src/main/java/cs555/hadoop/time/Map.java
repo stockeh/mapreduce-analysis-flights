@@ -41,7 +41,7 @@ public class Map extends Mapper<LongWritable, Text, Text, DoubleWritable> {
     if ( tmp.length() > 0 )
     {
       sb.setLength( 0 );
-      sb.append( Constants.TIME ).append( "\t" ).append( tmp );
+      sb.append( Constants.TIME ).append( Constants.SEPERATOR ).append( tmp );
       keyText.set( sb.toString() );
       context.write( keyText, val );
     }
@@ -50,7 +50,7 @@ public class Map extends Mapper<LongWritable, Text, Text, DoubleWritable> {
     if ( tmp.length() > 0 )
     {
       sb.setLength( 0 );
-      sb.append( Constants.WEEK ).append( "\t" ).append( tmp );
+      sb.append( Constants.WEEK ).append( Constants.SEPERATOR ).append( tmp );
       keyText.set( sb.toString() );
       context.write( keyText, val );
     }
@@ -59,7 +59,7 @@ public class Map extends Mapper<LongWritable, Text, Text, DoubleWritable> {
     if ( tmp.length() > 0 )
     {
       sb.setLength( 0 );
-      sb.append( Constants.MONTH ).append( "\t" ).append( tmp );
+      sb.append( Constants.MONTH ).append( Constants.SEPERATOR ).append( tmp );
       keyText.set( sb.toString() );
       context.write( keyText, val );
     }

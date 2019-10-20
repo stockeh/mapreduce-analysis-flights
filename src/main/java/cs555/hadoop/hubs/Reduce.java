@@ -37,7 +37,7 @@ public class Reduce extends Reducer<Text, Text, Text, IntWritable> {
     String[] split;
     for ( Text t : values )
     {
-      split = t.toString().split( "\t" );
+      split = t.toString().split( Constants.SEPERATOR );
       switch ( split[ 0 ] )
       {
         case Constants.DATA :
@@ -67,7 +67,7 @@ public class Reduce extends Reducer<Text, Text, Text, IntWritable> {
           if ( airport == null )
           {
             airport = split[ 1 ];
-            id = sb.append( key.toString() ).append( "\t" ).append( airport )
+            id = sb.append( key.toString() ).append( Constants.SEPERATOR ).append( airport )
                 .toString();
             sb.setLength( 0 );
           }
@@ -111,7 +111,7 @@ public class Reduce extends Reducer<Text, Text, Text, IntWritable> {
         if ( i++ < 10 )
         {
           context.write(
-              new Text( sb.append( e.getKey() ).append( "\t" )
+              new Text( sb.append( e.getKey() ).append( Constants.SEPERATOR )
                   .append( hubs.getKey() ).toString() ),
               new IntWritable( hubs.getValue() ) );
         } else

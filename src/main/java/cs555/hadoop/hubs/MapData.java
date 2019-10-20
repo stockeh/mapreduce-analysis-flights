@@ -44,7 +44,7 @@ public class MapData extends Mapper<LongWritable, Text, Text, Text> {
 
     if ( origin.length() > 0 )
     {
-      sb.append( origin ).append( "\t" )
+      sb.append( origin ).append( Constants.SEPERATOR )
           .append( year.length() > 0 ? year : -9999 );
       years.merge( sb.toString(), 1, Integer::sum );
       sb.setLength( 0 );
@@ -54,7 +54,7 @@ public class MapData extends Mapper<LongWritable, Text, Text, Text> {
 
     if ( dest.length() > 0 )
     {
-      sb.append( origin ).append( "\t" )
+      sb.append( dest ).append( Constants.SEPERATOR )
           .append( year.length() > 0 ? year : -9999 );
       years.merge( sb.toString(), 1, Integer::sum );
       sb.setLength( 0 );
@@ -73,10 +73,10 @@ public class MapData extends Mapper<LongWritable, Text, Text, Text> {
       throws IOException, InterruptedException {
     for ( Entry<String, Integer> e : years.entrySet() )
     {
-      String[] s = e.getKey().split( "\t" );
+      String[] s = e.getKey().split( Constants.SEPERATOR );
       keyText.set( s[ 0 ] );
-      val.set( sb.append( Constants.DATA ).append( "\t" ).append( s[ 1 ] )
-          .append( "\t" ).append( e.getValue() ).toString() );
+      val.set( sb.append( Constants.DATA ).append( Constants.SEPERATOR ).append( s[ 1 ] )
+          .append( Constants.SEPERATOR ).append( e.getValue() ).toString() );
       sb.setLength( 0 );
       context.write( keyText, val );
     }

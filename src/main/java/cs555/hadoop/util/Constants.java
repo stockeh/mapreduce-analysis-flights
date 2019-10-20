@@ -15,7 +15,9 @@ public interface Constants {
   final String MONTH = "MONTH";
 
   final String DATA = "DATA";
-  
+
   final String AIRPORTS = "AIRPORTS";
+
+  final String SEPERATOR = "\t";
 
 }
