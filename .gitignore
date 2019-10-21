@@ -3,6 +3,7 @@
 
 # Log file
 *.log
+/data/*/.~lock.*
 
 # BlueJ files
 *.ctxt

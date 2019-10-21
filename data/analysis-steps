@@ -1,0 +1,7 @@
+6. 
+
+Count the number of delays for the origin airport due to both incoming and outgoing flights.
+
+Compute the total number of flights in and out of that airport, and add it to the total for that coast.
+
+Calculate the percentage of delayed flights for each coast by dividing the total number of coast delays by the total number of flights on that coast.
