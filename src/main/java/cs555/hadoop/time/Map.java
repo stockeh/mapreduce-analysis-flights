@@ -32,8 +32,8 @@ public class Map extends Mapper<LongWritable, Text, Text, DoubleWritable> {
 
     ArrayList<String> line = DocumentUtilities.splitString( value.toString() );
 
-    double delay = DocumentUtilities.parseDouble( line.get( 14 ).trim() )
-        + DocumentUtilities.parseDouble( line.get( 15 ).trim() );
+    double delay = DocumentUtilities.parseDouble( line.get( 14 ) )
+        + DocumentUtilities.parseDouble( line.get( 15 ) );
 
     val.set( delay );
 

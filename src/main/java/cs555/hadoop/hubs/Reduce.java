@@ -20,8 +20,14 @@ import cs555.hadoop.util.DocumentUtilities;
  */
 public class Reduce extends Reducer<Text, Text, Text, IntWritable> {
 
-  // Airport Name, Total Num of Flights In & Out
-  private final TreeMap<Integer, String> globalTop = new TreeMap<>();
+  // Total Num of Flights In & Out, Airport Name
+  private final TreeMap<Integer, String> globalTopFlights = new TreeMap<>();
+
+  // Total Num of Wx Related Delays, City Name
+  private final TreeMap<Integer, String> globalTopWxDelays = new TreeMap<>();
+
+  // Average Num of Wx Related Delays, City Name
+  private final TreeMap<Double, String> globalAverageWxDelays = new TreeMap<>();
 
   // Year, (IATA / Airport Name, Num Flights In & Out)
   private final TreeMap<String, Map<String, Integer>> years = new TreeMap<>();
@@ -43,8 +49,9 @@ public class Reduce extends Reducer<Text, Text, Text, IntWritable> {
   protected void reduce(Text key, Iterable<Text> values, Context context)
       throws IOException, InterruptedException {
 
-    int flightCount, totalFlightsPerIATA = 0, numberOfDelaysPerIATA = 0;
-    String airport = null, year, id = "", coast = Constants.NONE;
+    int flightCount, totalFlightsPerIATA = 0, numberOfDelaysPerIATA = 0,
+        numberOfWxDelays = 0;
+    String year, city = null, airport = null, id = "", coast = Constants.NONE;
     String[] split;
     for ( Text t : values )
     {
@@ -55,24 +62,11 @@ public class Reduce extends Reducer<Text, Text, Text, IntWritable> {
           year = split[ 1 ];
           flightCount = DocumentUtilities.parseInt( split[ 2 ] );
           totalFlightsPerIATA += flightCount;
-          Map<String, Integer> hubs = years.get( year );
-          if ( hubs == null )
-          {
-            hubs = new HashMap<>();
-            years.put( year, hubs );
-          }
-          // Add the flight count for this IATA & the input year
-          if ( airport == null )
-          {
-            hubs.put( key.toString(),
-                hubs.getOrDefault( key.toString(), 0 ) + flightCount );
-          } else if ( hubs.containsKey( key.toString() ) )
-          {
-            hubs.put( id, hubs.remove( key.toString() ) );
-          } else
-          {
-            hubs.put( id, hubs.getOrDefault( id, 0 ) + flightCount );
-          }
+
+          updateFlightCount( key.toString(), id, year, airport, flightCount );
+
+          numberOfWxDelays += DocumentUtilities.parseInt( split[ 4 ] );
+
           numberOfDelaysPerIATA += DocumentUtilities.parseInt( split[ 3 ] );
           break;
 
@@ -81,6 +75,9 @@ public class Reduce extends Reducer<Text, Text, Text, IntWritable> {
           id = sb.append( key.toString() ).append( Constants.SEPERATOR )
               .append( airport ).toString();
           sb.setLength( 0 );
+
+          city = split[ 3 ];
+
           if ( split[ 2 ].equals( Constants.EAST ) )
           {
             coast = Constants.EAST;
@@ -91,12 +88,37 @@ public class Reduce extends Reducer<Text, Text, Text, IntWritable> {
           break;
       }
     }
-    globalTop.put( totalFlightsPerIATA, id );
+    globalTopFlights.put( totalFlightsPerIATA, id );
 
-    if ( globalTop.size() > 10 )
+    if ( globalTopFlights.size() > 10 )
     {
-      globalTop.remove( globalTop.firstKey() );
+      globalTopFlights.remove( globalTopFlights.firstKey() );
     }
+
+    if ( numberOfWxDelays > 0 )
+    {
+      globalTopWxDelays.put( numberOfWxDelays, city );
+
+      if ( globalTopWxDelays.size() > 10 )
+      {
+        globalTopWxDelays.remove( globalTopWxDelays.firstKey() );
+      }
+
+      // total number of flights in and out of the airport
+      sb.append( city ).append( "\tNumberOfDelays: " )
+          .append( numberOfWxDelays ).append( "\tNumberOfFlights: " )
+          .append( totalFlightsPerIATA ).append( "\tAverage %:" );
+
+      globalAverageWxDelays.put(
+          numberOfWxDelays / ( double ) totalFlightsPerIATA, sb.toString() );
+      sb.setLength( 0 );
+
+      if ( globalAverageWxDelays.size() > 10 )
+      {
+        globalAverageWxDelays.remove( globalAverageWxDelays.firstKey() );
+      }
+    }
+
     if ( coast.equals( Constants.EAST ) )
     {
       eastCoastDelays += numberOfDelaysPerIATA;
@@ -105,6 +127,35 @@ public class Reduce extends Reducer<Text, Text, Text, IntWritable> {
     {
       westCoastDelays += numberOfDelaysPerIATA;
       totalWestCostFlights += totalFlightsPerIATA;
+    }
+  }
+
+  /**
+   * Add the flight count for this IATA & the input year
+   * 
+   * @param key
+   * @param id
+   * @param year
+   * @param airport
+   * @param flightCount
+   */
+  private void updateFlightCount(String key, String id, String year,
+      String airport, int flightCount) {
+    Map<String, Integer> hubs = years.get( year );
+    if ( hubs == null )
+    {
+      hubs = new HashMap<>();
+      years.put( year, hubs );
+    }
+    if ( airport == null )
+    {
+      hubs.put( key, hubs.getOrDefault( key, 0 ) + flightCount );
+    } else if ( hubs.containsKey( key ) )
+    {
+      hubs.put( id, hubs.remove( key ) );
+    } else
+    {
+      hubs.put( id, hubs.getOrDefault( id, 0 ) + flightCount );
     }
   }
 
@@ -118,6 +169,25 @@ public class Reduce extends Reducer<Text, Text, Text, IntWritable> {
   @Override
   protected void cleanup(Context context)
       throws IOException, InterruptedException {
+    context.write( new Text( "\n----Q4. TOP MOST WX DELAYS BY CITY" ),
+        new IntWritable() );
+
+    for ( Entry<Integer, String> e : globalTopWxDelays.descendingMap()
+        .entrySet() )
+    {
+      context.write( new Text( e.getValue() ), new IntWritable( e.getKey() ) );
+    }
+    context.write( new Text( "\n----    AVERAGE MOST WX DELAYS BY CITY" ),
+        new IntWritable() );
+
+    for ( Entry<Double, String> e : globalAverageWxDelays.descendingMap()
+        .entrySet() )
+    {
+      context.write(
+          new Text( e.getValue() + "\t" + String.format( "%.3f", e.getKey() ) ),
+          new IntWritable( e.getKey().intValue() ) );
+    }
+
     context.write( new Text( "\n----Q6. EAST VS WEST COAST NUMBER OF DELAYS" ),
         new IntWritable() );
 
@@ -135,7 +205,8 @@ public class Reduce extends Reducer<Text, Text, Text, IntWritable> {
     context.write( new Text( "\n----Q3. GLOBAL BUSIEST DOMESTIC AIRPORTS" ),
         new IntWritable() );
 
-    for ( Entry<Integer, String> e : globalTop.descendingMap().entrySet() )
+    for ( Entry<Integer, String> e : globalTopFlights.descendingMap()
+        .entrySet() )
     {
       context.write( new Text( e.getValue() ), new IntWritable( e.getKey() ) );
     }

@@ -23,7 +23,7 @@ public class MapAirports extends Mapper<LongWritable, Text, Text, Text> {
   private final StringBuilder sb = new StringBuilder();
 
   /**
-   * k: iata, v: AIRPORTS airport_name EAST/WEST/NONE
+   * k: iata, v: AIRPORTS airport_name EAST/WEST/NONE city_name
    */
   @Override
   protected void map(LongWritable key, Text value, Context context)
@@ -46,10 +46,13 @@ public class MapAirports extends Mapper<LongWritable, Text, Text, Text> {
       }
 
       String airport = line.get( 1 );
+      String city = line.get( 2 );
 
       sb.append( Constants.AIRPORTS ).append( Constants.SEPERATOR )
           .append( airport.length() > 0 ? airport : "airport" )
-          .append( Constants.SEPERATOR ).append( coast );
+          .append( Constants.SEPERATOR ).append( coast )
+          .append( Constants.SEPERATOR )
+          .append( city.length() > 0 ? city : "city" );
 
       keyText.set( iata );
       val.set( sb.toString() );
