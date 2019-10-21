@@ -16,8 +16,8 @@ cat << EOF
     
     Usage: run.sh -[ 1 | 2 ] -c -s
 
-    -1 : Basic Questions
-    -2 : Hub Questions
+    -1 : Basic Questions Q1, Q2
+    -2 : Hub Questions Q3, Q6
     
     -c : Compile
     -s : Shared HDFS

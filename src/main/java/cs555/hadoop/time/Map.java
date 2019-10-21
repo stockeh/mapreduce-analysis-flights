@@ -32,8 +32,8 @@ public class Map extends Mapper<LongWritable, Text, Text, DoubleWritable> {
 
     ArrayList<String> line = DocumentUtilities.splitString( value.toString() );
 
-    double delay = DocumentUtilities.parseDouble( line.get( 14 ).trim() )
-        + DocumentUtilities.parseDouble( line.get( 15 ).trim() );
+    double delay = DocumentUtilities.parseDouble( line.get( 14 ) )
+        + DocumentUtilities.parseDouble( line.get( 15 ) );
 
     val.set( delay );
 
@@ -41,7 +41,7 @@ public class Map extends Mapper<LongWritable, Text, Text, DoubleWritable> {
     if ( tmp.length() > 0 )
     {
       sb.setLength( 0 );
-      sb.append( Constants.TIME ).append( "\t" ).append( tmp );
+      sb.append( Constants.TIME ).append( Constants.SEPERATOR ).append( tmp );
       keyText.set( sb.toString() );
       context.write( keyText, val );
     }
@@ -50,7 +50,7 @@ public class Map extends Mapper<LongWritable, Text, Text, DoubleWritable> {
     if ( tmp.length() > 0 )
     {
       sb.setLength( 0 );
-      sb.append( Constants.WEEK ).append( "\t" ).append( tmp );
+      sb.append( Constants.WEEK ).append( Constants.SEPERATOR ).append( tmp );
       keyText.set( sb.toString() );
       context.write( keyText, val );
     }
@@ -59,7 +59,7 @@ public class Map extends Mapper<LongWritable, Text, Text, DoubleWritable> {
     if ( tmp.length() > 0 )
     {
       sb.setLength( 0 );
-      sb.append( Constants.MONTH ).append( "\t" ).append( tmp );
+      sb.append( Constants.MONTH ).append( Constants.SEPERATOR ).append( tmp );
       keyText.set( sb.toString() );
       context.write( keyText, val );
     }

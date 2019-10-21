@@ -2,6 +2,9 @@ package cs555.hadoop.hubs;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
@@ -16,6 +19,16 @@ import cs555.hadoop.util.DocumentUtilities;
  */
 public class MapData extends Mapper<LongWritable, Text, Text, Text> {
 
+  // IATA   Year, Num of Flights for that IATA+Year combo
+  private final Map<String, Integer> years = new HashMap<>();
+
+  // IATA, Num of Delays
+  private final Map<String, Integer> numberOfDelayedFlights = new HashMap<>();
+
+  // IATA, Num of Delays
+  private final Map<String, Integer> numberOfWeatherDelayedFlights =
+      new HashMap<>();
+
   private final Text keyText = new Text();
 
   private final Text val = new Text();
@@ -23,7 +36,9 @@ public class MapData extends Mapper<LongWritable, Text, Text, Text> {
   private final StringBuilder sb = new StringBuilder();
 
   /**
+   * for each iata-year combination.
    * 
+   * k: iata, v: DATA year airport_count origin_delay_count origin_delay_count_from_wx
    */
   @Override
   protected void map(LongWritable key, Text value, Context context)
@@ -33,24 +48,109 @@ public class MapData extends Mapper<LongWritable, Text, Text, Text> {
 
     String year = line.get( 0 );
 
-    sb.append( Constants.DATA ).append( "\t" )
-        .append( year.length() > 0 ? year : "-9999" );
-    val.set( sb.toString() );
-    sb.setLength( 0 );
-
     String origin = line.get( 16 );
 
     if ( origin.length() > 0 )
     {
-      keyText.set( origin );
-      context.write( keyText, val );
+      sb.append( origin ).append( Constants.SEPERATOR )
+          .append( year.length() > 0 ? year : -9999 );
+      years.merge( sb.toString(), 1, Integer::sum );
+      sb.setLength( 0 );
+
+      // Add one to origin IATA if flight was delayed in any way
+      if ( flightIsDelayed( line ) )
+      {
+        numberOfDelayedFlights.merge( origin, 1, Integer::sum );
+      }
+
+      if ( flightIsDelayedbyWeather( line ) )
+      {
+        numberOfWeatherDelayedFlights.merge( origin, 1, Integer::sum );
+      }
     }
 
     String dest = line.get( 17 );
 
     if ( dest.length() > 0 )
     {
-      keyText.set( dest );
+      sb.append( dest ).append( Constants.SEPERATOR )
+          .append( year.length() > 0 ? year : -9999 );
+      years.merge( sb.toString(), 1, Integer::sum );
+      sb.setLength( 0 );
+    }
+
+  }
+
+  /**
+   * 
+   * @param line
+   * @return if the flight was delayed in any way.
+   */
+  private boolean flightIsDelayed(ArrayList<String> line) {
+    if ( DocumentUtilities.parseDouble( line.get( 14 ) ) > 0
+        || DocumentUtilities.parseDouble( line.get( 15 ) ) > 0
+        || DocumentUtilities.parseDouble( line.get( 24 ) ) > 0
+        || DocumentUtilities.parseDouble( line.get( 25 ) ) > 0
+        || DocumentUtilities.parseDouble( line.get( 26 ) ) > 0
+        || DocumentUtilities.parseDouble( line.get( 27 ) ) > 0
+        || ( line.size() > 28
+            && DocumentUtilities.parseDouble( line.get( 28 ) ) > 0 ) )
+    {
+      return true;
+    } else
+    {
+      return false;
+    }
+  }
+
+  /**
+   * 
+   * @param line
+   * @return true if the flight was delayed by weather
+   */
+  private boolean flightIsDelayedbyWeather(ArrayList<String> line) {
+    if ( DocumentUtilities.parseDouble( line.get( 25 ) ) > 0 )
+    {
+      return true;
+    } else
+    {
+      return false;
+    }
+  }
+
+  /**
+   * Once the <code>reduce</code> method has completed execution, the
+   * <code>cleanup</code> method is called.
+   *
+   * This method will write associated values in the desired manner to
+   * <code>Context</code> to be viewed in HDFS.
+   */
+  @Override
+  protected void cleanup(Context context)
+      throws IOException, InterruptedException {
+    for ( Entry<String, Integer> e : years.entrySet() )
+    {
+      String[] s = e.getKey().split( Constants.SEPERATOR );
+      String iata = s[ 0 ];
+      keyText.set( iata );
+      int delayedFlightsPerIATA =
+          numberOfDelayedFlights.getOrDefault( iata, 0 );
+      int delayedFlightsDueToWeatherPerIATA =
+          numberOfWeatherDelayedFlights.getOrDefault( iata, 0 );
+      val.set( sb.append( Constants.DATA ).append( Constants.SEPERATOR )
+          .append( s[ 1 ] ).append( Constants.SEPERATOR ).append( e.getValue() )
+          .append( Constants.SEPERATOR ).append( delayedFlightsPerIATA )
+          .append( Constants.SEPERATOR ).append( delayedFlightsDueToWeatherPerIATA )
+          .toString() );
+      sb.setLength( 0 );
+      if ( delayedFlightsPerIATA != 0 )
+      {
+        numberOfDelayedFlights.remove( iata );
+      }
+      if ( delayedFlightsDueToWeatherPerIATA != 0 )
+      {
+        numberOfWeatherDelayedFlights.remove( iata );
+      }
       context.write( keyText, val );
     }
   }

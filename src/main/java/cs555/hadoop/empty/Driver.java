@@ -1,10 +1,10 @@
-package cs555.hadoop.time;
+package cs555.hadoop.empty;
 
 import java.io.IOException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.DoubleWritable;
+import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.MultipleInputs;
@@ -51,18 +51,17 @@ public class Driver {
 
       Job job = Job.getInstance( conf, "Initial Analysis - Job 1" );
       job.setJarByClass( Driver.class );
-      job.setNumReduceTasks( 3 );
+      job.setNumReduceTasks( 1 );
 
       job.setMapOutputKeyClass( Text.class );
-      job.setMapOutputValueClass( DoubleWritable.class );
+      job.setMapOutputValueClass( Text.class );
 
       job.setOutputKeyClass( Text.class );
-      job.setOutputValueClass( DoubleWritable.class );
+      job.setOutputValueClass( IntWritable.class );
 
       MultipleInputs.addInputPath( job, new Path( args[ 0 ] ),
           TextInputFormat.class, Map.class );
 
-      job.setPartitionerClass( CustomPartitioner.class );
       job.setReducerClass( Reduce.class );
 
       FileOutputFormat.setOutputPath( job, new Path( args[ 1 ] ) );
