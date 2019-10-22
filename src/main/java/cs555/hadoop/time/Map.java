@@ -24,7 +24,7 @@ public class Map extends Mapper<LongWritable, Text, Text, DoubleWritable> {
   private final StringBuilder sb = new StringBuilder();
 
   /**
-   * 
+   * TIME/WEEK/MONTH    time, delay
    */
   @Override
   protected void map(LongWritable key, Text value, Context context)
@@ -41,7 +41,8 @@ public class Map extends Mapper<LongWritable, Text, Text, DoubleWritable> {
     if ( tmp.length() > 0 )
     {
       sb.setLength( 0 );
-      sb.append( Constants.TIME ).append( Constants.SEPERATOR ).append( tmp );
+      sb.append( Constants.TIME ).append( Constants.SEPERATOR )
+          .append( transformDepTime( tmp ) );
       keyText.set( sb.toString() );
       context.write( keyText, val );
     }
@@ -67,17 +68,26 @@ public class Map extends Mapper<LongWritable, Text, Text, DoubleWritable> {
 
   /**
    * 
-   * @param sb
    * @param time hhmm
    * @return the string rounded to the nearest 15 minute interval.
    */
-  private String transformDepTime(StringBuilder sb, String time) {
+  private String transformDepTime(String time) {
     time = String.format( "%4s", time ).replace( ' ', '0' );
     int hours = Integer.parseInt( time.substring( 0, 2 ) );
     int i = Integer.parseInt( time.substring( 2, 4 ) );
     int minutes = i % 15 < 8 ? i / 15 * 15 : ( i / 15 + 1 ) * 15;
-    return sb.append( String.format( "%02d", hours ) )
-        .append( String.format( "%02d", minutes ) ).toString();
+    if ( minutes >= 60 )
+    {
+      if ( hours == 23 )
+      {
+        hours = 0;
+      } else
+      {
+        ++hours;
+      }
+      minutes = 0;
+    }
+    return String.format( "%02d", hours ) + String.format( "%02d", minutes );
   }
 
 }

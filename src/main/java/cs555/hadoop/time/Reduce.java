@@ -20,6 +20,7 @@ public class Reduce
 
   private final static Text minTime = new Text();
   private static double minTimeVal = Double.MAX_VALUE;
+
   /**
    * 
    */
@@ -35,6 +36,7 @@ public class Reduce
       ++count;
     }
     total /= count;
+    context.write( key, new DoubleWritable( total ) );
 
     if ( total > maxTimeVal )
     {
@@ -58,12 +60,14 @@ public class Reduce
   @Override
   protected void cleanup(Context context)
       throws IOException, InterruptedException {
-    context.write( new Text( "\n----Q1. BEST TIME TO MINIMIZE DELAYS" ),
-        new DoubleWritable() );
-    context.write( minTime, new DoubleWritable( minTimeVal ) );
-
-    context.write( new Text( "\n----Q2. WORST TIME TO MINIMIZE DELAYS" ),
-        new DoubleWritable() );
-    context.write( maxTime, new DoubleWritable( maxTimeVal ) );
+    // context.write( new Text( "\n----Q1. BEST TIME TO MINIMIZE DELAYS"
+    // ),
+    // new DoubleWritable() );
+    // context.write( minTime, new DoubleWritable( minTimeVal ) );
+    //
+    // context.write( new Text( "\n----Q2. WORST TIME TO MINIMIZE DELAYS"
+    // ),
+    // new DoubleWritable() );
+    // context.write( maxTime, new DoubleWritable( maxTimeVal ) );
   }
 }
