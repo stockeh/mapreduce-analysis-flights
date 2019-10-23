@@ -3,7 +3,7 @@ package cs555.hadoop.carriers;
 import java.io.IOException;
 import java.util.Map.Entry;
 import java.util.TreeMap;
-import org.apache.hadoop.io.DoubleWritable;
+import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 import cs555.hadoop.util.Constants;
@@ -16,7 +16,7 @@ import cs555.hadoop.util.DocumentUtilities;
  * @author stock
  *
  */
-public class Reduce extends Reducer<Text, Text, Text, DoubleWritable> {
+public class Reduce extends Reducer<Text, Text, Text, NullWritable> {
 
   private final TreeMap<Integer, String> topTotalDelays = new TreeMap<>();
 
@@ -56,8 +56,9 @@ public class Reduce extends Reducer<Text, Text, Text, DoubleWritable> {
     }
     if ( totalDelay > 0 )
     {
-      String s = sb.append( Constants.SEPERATOR ).append( "CUMULATIVE: " ).append( totalDelay )
-          .append( Constants.SEPERATOR ).append( "TOTAL COUNT: " ).append( count ).toString();
+      String s = sb.append( Constants.SEPERATOR ).append( "CUMULATIVE: " )
+          .append( totalDelay ).append( Constants.SEPERATOR )
+          .append( "TOTAL COUNT: " ).append( count ).toString();
 
       topTotalCount.put( count, s );
       if ( topTotalCount.size() > 10 )
@@ -90,28 +91,28 @@ public class Reduce extends Reducer<Text, Text, Text, DoubleWritable> {
   protected void cleanup(Context context)
       throws IOException, InterruptedException {
     context.write( new Text( "\n----Q5. CARRIERS WITH TOP NUMBER OF DELAYS" ),
-        new DoubleWritable() );
+        NullWritable.get() );
 
     for ( Entry<Integer, String> e : topTotalCount.descendingMap().entrySet() )
     {
-      context.write( new Text( e.getValue() ),
-          new DoubleWritable( e.getKey() ) );
+      context.write( new Text( e.getValue() + "\t" + e.getKey() ),
+          NullWritable.get() );
     }
 
     context.write( new Text( "\n----    CARRIERS WITH TOP ACCUMULATIVE DELAY" ),
-        new DoubleWritable() );
+        NullWritable.get() );
     for ( Entry<Integer, String> e : topTotalDelays.descendingMap().entrySet() )
     {
-      context.write( new Text( e.getValue() ),
-          new DoubleWritable( e.getKey() ) );
+      context.write( new Text( e.getValue() + "\t" + e.getKey() ),
+          NullWritable.get() );
     }
 
     context.write( new Text( "\n----    CARRIERS WITH TOP AVERAGE DELAY" ),
-        new DoubleWritable() );
+        NullWritable.get() );
     for ( Entry<Double, String> e : topAverage.descendingMap().entrySet() )
     {
-      context.write( new Text( e.getValue() ),
-          new DoubleWritable( e.getKey() ) );
+      context.write( new Text( e.getValue() + "\t" + e.getKey() ),
+          NullWritable.get() );
     }
   }
 }

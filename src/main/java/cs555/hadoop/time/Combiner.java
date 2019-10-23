@@ -1,4 +1,4 @@
-package cs555.hadoop.carriers;
+package cs555.hadoop.time;
 
 import java.io.IOException;
 import org.apache.hadoop.io.Text;
@@ -20,27 +20,14 @@ public class Combiner extends Reducer<Text, Text, Text, Text> {
     for ( Text v : value )
     {
       String[] split = v.toString().split( Constants.SEPERATOR );
-
-      switch ( split[ 0 ] )
-      {
-        case Constants.DATA :
-          totalDelay += DocumentUtilities.parseDouble( split[ 1 ] );
-          count += DocumentUtilities.parseDouble( split[ 2 ] );
-          break;
-
-        case Constants.CARRIER :
-          context.write( key, v );
-          break;
-      }
+      totalDelay += DocumentUtilities.parseDouble( split[ 0 ] );
+      count += DocumentUtilities.parseDouble( split[ 1 ] );
     }
-    if ( count > 0 )
-    {
-      sb.append( Constants.DATA ).append( Constants.SEPERATOR )
-          .append( totalDelay ).append( Constants.SEPERATOR ).append( count );
-      val.set( sb.toString() );
-      sb.setLength( 0 );
-      context.write( key, val );
-    }
+    sb.setLength( 0 );
+    sb.append( totalDelay ).append( Constants.SEPERATOR ).append( count );
+    val.set( sb.toString() );
+
+    context.write( key, val );
   }
 
 }

@@ -4,7 +4,7 @@ import java.io.IOException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.DoubleWritable;
+import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.MultipleInputs;
@@ -57,7 +57,7 @@ public class Driver {
       job.setMapOutputValueClass( Text.class );
 
       job.setOutputKeyClass( Text.class );
-      job.setOutputValueClass( DoubleWritable.class );
+      job.setOutputValueClass( NullWritable.class );
 
       MultipleInputs.addInputPath( job, new Path( args[ 0 ] ),
           TextInputFormat.class, DataMap.class );

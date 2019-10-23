@@ -54,7 +54,7 @@ public class Driver {
       job.setNumReduceTasks( 3 );
 
       job.setMapOutputKeyClass( Text.class );
-      job.setMapOutputValueClass( DoubleWritable.class );
+      job.setMapOutputValueClass( Text.class );
 
       job.setOutputKeyClass( Text.class );
       job.setOutputValueClass( DoubleWritable.class );
@@ -62,6 +62,7 @@ public class Driver {
       MultipleInputs.addInputPath( job, new Path( args[ 0 ] ),
           TextInputFormat.class, Map.class );
 
+      job.setCombinerClass( Combiner.class );
       job.setPartitionerClass( CustomPartitioner.class );
       job.setReducerClass( Reduce.class );
 
