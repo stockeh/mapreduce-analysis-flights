@@ -58,7 +58,7 @@ public class MapData extends Mapper<LongWritable, Text, Text, Text> {
       sb.setLength( 0 );
 
       // Add one to origin IATA if flight was delayed in any way
-      if ( flightIsDelayed( line ) )
+      if ( DocumentUtilities.flightIsDelayed( line ) )
       {
         numberOfDelayedFlights.merge( origin, 1, Integer::sum );
       }
@@ -79,28 +79,6 @@ public class MapData extends Mapper<LongWritable, Text, Text, Text> {
       sb.setLength( 0 );
     }
 
-  }
-
-  /**
-   * 
-   * @param line
-   * @return if the flight was delayed in any way.
-   */
-  private boolean flightIsDelayed(ArrayList<String> line) {
-    if ( DocumentUtilities.parseDouble( line.get( 14 ) ) > 0
-        || DocumentUtilities.parseDouble( line.get( 15 ) ) > 0
-        || DocumentUtilities.parseDouble( line.get( 24 ) ) > 0
-        || DocumentUtilities.parseDouble( line.get( 25 ) ) > 0
-        || DocumentUtilities.parseDouble( line.get( 26 ) ) > 0
-        || DocumentUtilities.parseDouble( line.get( 27 ) ) > 0
-        || ( line.size() > 28
-            && DocumentUtilities.parseDouble( line.get( 28 ) ) > 0 ) )
-    {
-      return true;
-    } else
-    {
-      return false;
-    }
   }
 
   /**

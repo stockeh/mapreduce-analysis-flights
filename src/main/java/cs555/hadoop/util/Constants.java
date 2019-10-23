@@ -34,7 +34,9 @@ public interface Constants {
 
   final String WEST = "WEST";
 
-  final String EAST = "East";
+  final String EAST = "EAST";
 
   final String NONE = "NONE";
+
+  final String CARRIER = "CARRIER";
 }

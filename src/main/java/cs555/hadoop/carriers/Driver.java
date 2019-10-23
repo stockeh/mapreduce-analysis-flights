@@ -1,10 +1,10 @@
-package cs555.hadoop.time;
+package cs555.hadoop.carriers;
 
 import java.io.IOException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.DoubleWritable;
+import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.MultipleInputs;
@@ -49,24 +49,26 @@ public class Driver {
     private int runJob1(String[] args, Configuration conf)
         throws IOException, ClassNotFoundException, InterruptedException {
 
-      Job job = Job.getInstance( conf, "Initial Analysis - Job 1" );
+      Job job = Job.getInstance( conf, "Carrier Analysis - Job 1" );
       job.setJarByClass( Driver.class );
-      job.setNumReduceTasks( 3 );
+      job.setNumReduceTasks( 1 );
 
       job.setMapOutputKeyClass( Text.class );
       job.setMapOutputValueClass( Text.class );
 
       job.setOutputKeyClass( Text.class );
-      job.setOutputValueClass( DoubleWritable.class );
+      job.setOutputValueClass( NullWritable.class );
 
       MultipleInputs.addInputPath( job, new Path( args[ 0 ] ),
-          TextInputFormat.class, Map.class );
+          TextInputFormat.class, DataMap.class );
+      
+      MultipleInputs.addInputPath( job, new Path( args[ 1 ] ),
+          TextInputFormat.class, CarrierMap.class );
 
       job.setCombinerClass( Combiner.class );
-      job.setPartitionerClass( CustomPartitioner.class );
       job.setReducerClass( Reduce.class );
 
-      FileOutputFormat.setOutputPath( job, new Path( args[ 1 ] ) );
+      FileOutputFormat.setOutputPath( job, new Path( args[ 2 ] ) );
 
       return job.waitForCompletion( true ) ? 0 : 1;
     }
@@ -82,7 +84,7 @@ public class Driver {
     {
       System.out.println( args[ i ] );
     }
-    if ( args.length != 2 )
+    if ( args.length != 3 )
     {
       System.err.println( "Invalid Argument Configurations - add / remove" );
       System.exit( 0 );

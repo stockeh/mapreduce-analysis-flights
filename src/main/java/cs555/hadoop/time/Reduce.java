@@ -4,6 +4,8 @@ import java.io.IOException;
 import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
+import cs555.hadoop.util.Constants;
+import cs555.hadoop.util.DocumentUtilities;
 
 /**
  * Reducer class that takes the output from the mapper and organizes
@@ -12,38 +14,41 @@ import org.apache.hadoop.mapreduce.Reducer;
  * @author stock
  *
  */
-public class Reduce
-    extends Reducer<Text, DoubleWritable, Text, DoubleWritable> {
+public class Reduce extends Reducer<Text, Text, Text, DoubleWritable> {
 
   private final static Text maxTime = new Text();
   private static double maxTimeVal;
 
   private final static Text minTime = new Text();
   private static double minTimeVal = Double.MAX_VALUE;
+
   /**
    * 
    */
   @Override
-  protected void reduce(Text key, Iterable<DoubleWritable> values,
-      Context context) throws IOException, InterruptedException {
+  protected void reduce(Text key, Iterable<Text> values, Context context)
+      throws IOException, InterruptedException {
 
-    double total = 0;
+    int totalDelay = 0;
     int count = 0;
-    for ( DoubleWritable v : values )
-    {
-      total += v.get();
-      ++count;
-    }
-    total /= count;
 
-    if ( total > maxTimeVal )
+    for ( Text t : values )
     {
-      maxTimeVal = total;
+      String[] split = t.toString().split( Constants.SEPERATOR );
+      totalDelay += DocumentUtilities.parseDouble( split[ 0 ] );
+      count += DocumentUtilities.parseDouble( split[ 1 ] );
+    }
+
+    double avg = totalDelay / ( double ) count;
+
+    if ( avg > maxTimeVal )
+    {
+      maxTimeVal = avg;
       maxTime.set( key );
     }
-    if ( total < minTimeVal )
+    if ( avg < minTimeVal )
     {
-      minTimeVal = total;
+      minTimeVal = avg;
       minTime.set( key );
     }
   }

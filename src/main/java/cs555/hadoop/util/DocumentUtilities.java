@@ -97,4 +97,26 @@ public class DocumentUtilities {
       return 0;
     }
   }
+
+  /**
+   * 
+   * @param line
+   * @return if the flight was delayed in any way.
+   */
+  public static boolean flightIsDelayed(ArrayList<String> line) {
+    if ( DocumentUtilities.parseDouble( line.get( 14 ) ) > 0
+        || DocumentUtilities.parseDouble( line.get( 15 ) ) > 0
+        || DocumentUtilities.parseDouble( line.get( 24 ) ) > 0
+        || DocumentUtilities.parseDouble( line.get( 25 ) ) > 0
+        || DocumentUtilities.parseDouble( line.get( 26 ) ) > 0
+        || DocumentUtilities.parseDouble( line.get( 27 ) ) > 0
+        || ( line.size() > 28
+            && DocumentUtilities.parseDouble( line.get( 28 ) ) > 0 ) )
+    {
+      return true;
+    } else
+    {
+      return false;
+    }
+  }
 }
