@@ -19,7 +19,7 @@ import cs555.hadoop.util.DocumentUtilities;
  */
 public class MapData extends Mapper<LongWritable, Text, Text, Text> {
 
-  // IATA   Year, Num of Flights for that IATA+Year combo
+  // IATA Year, Num of Flights for that IATA+Year combo
   private final Map<String, Integer> years = new HashMap<>();
 
   // IATA, Num of Delays
@@ -38,7 +38,8 @@ public class MapData extends Mapper<LongWritable, Text, Text, Text> {
   /**
    * for each iata-year combination.
    * 
-   * k: iata, v: DATA year airport_count origin_delay_count origin_delay_count_from_wx
+   * k: iata, v: DATA year airport_count origin_delay_count
+   * origin_delay_count_from_wx
    */
   @Override
   protected void map(LongWritable key, Text value, Context context)
@@ -49,7 +50,7 @@ public class MapData extends Mapper<LongWritable, Text, Text, Text> {
     String year = line.get( 0 );
 
     String origin = line.get( 16 );
-
+    
     if ( origin.length() > 0 )
     {
       sb.append( origin ).append( Constants.SEPERATOR )
@@ -57,13 +58,13 @@ public class MapData extends Mapper<LongWritable, Text, Text, Text> {
       years.merge( sb.toString(), 1, Integer::sum );
       sb.setLength( 0 );
 
-      // Add one to origin IATA if flight was delayed in any way
-      if ( DocumentUtilities.flightIsDelayed( line ) )
+      String delay = line.get( 15 );
+      if ( delay.length() > 0 && DocumentUtilities.parseDouble( delay ) > 0 )
       {
         numberOfDelayedFlights.merge( origin, 1, Integer::sum );
       }
 
-      if ( flightIsDelayedbyWeather( line ) )
+      if ( DocumentUtilities.parseDouble( line.get( 25 ) ) > 0 )
       {
         numberOfWeatherDelayedFlights.merge( origin, 1, Integer::sum );
       }
@@ -77,23 +78,15 @@ public class MapData extends Mapper<LongWritable, Text, Text, Text> {
           .append( year.length() > 0 ? year : -9999 );
       years.merge( sb.toString(), 1, Integer::sum );
       sb.setLength( 0 );
+      
+      String delay = line.get( 14 );
+      if ( delay.length() > 0 && DocumentUtilities.parseDouble( delay ) > 0 )
+      {
+        numberOfDelayedFlights.merge( dest, 1, Integer::sum );
+      }
+
     }
 
-  }
-
-  /**
-   * 
-   * @param line
-   * @return true if the flight was delayed by weather
-   */
-  private boolean flightIsDelayedbyWeather(ArrayList<String> line) {
-    if ( DocumentUtilities.parseDouble( line.get( 25 ) ) > 0 )
-    {
-      return true;
-    } else
-    {
-      return false;
-    }
   }
 
   /**
@@ -118,8 +111,8 @@ public class MapData extends Mapper<LongWritable, Text, Text, Text> {
       val.set( sb.append( Constants.DATA ).append( Constants.SEPERATOR )
           .append( s[ 1 ] ).append( Constants.SEPERATOR ).append( e.getValue() )
           .append( Constants.SEPERATOR ).append( delayedFlightsPerIATA )
-          .append( Constants.SEPERATOR ).append( delayedFlightsDueToWeatherPerIATA )
-          .toString() );
+          .append( Constants.SEPERATOR )
+          .append( delayedFlightsDueToWeatherPerIATA ).toString() );
       sb.setLength( 0 );
       if ( delayedFlightsPerIATA != 0 )
       {
