@@ -28,9 +28,9 @@ public interface Constants {
   final Set<String> WEST_COAST = Collections.unmodifiableSet(
       new HashSet<>( Arrays.asList( "AK", "WA", "OR", "CA" ) ) );
 
-  final Set<String> EAST_COAST = Collections
-      .unmodifiableSet( new HashSet<>( Arrays.asList( "ME", "NH", "MA", "RI",
-          "CT", "NY", "NJ", "DE", "MD", "VA", "NC", "SC", "GA", "FL", "PA" ) ) );
+  final Set<String> EAST_COAST = Collections.unmodifiableSet(
+      new HashSet<>( Arrays.asList( "ME", "NH", "MA", "RI", "CT", "NY", "NJ",
+          "DE", "MD", "VA", "NC", "SC", "GA", "FL", "PA", "DC" ) ) );
 
   final String WEST = "WEST";
 
