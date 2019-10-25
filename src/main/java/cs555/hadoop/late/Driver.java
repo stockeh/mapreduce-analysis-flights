@@ -1,10 +1,9 @@
-package cs555.hadoop.empty;
+package cs555.hadoop.late;
 
 import java.io.IOException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.MultipleInputs;
@@ -49,7 +48,7 @@ public class Driver {
     private int runJob1(String[] args, Configuration conf)
         throws IOException, ClassNotFoundException, InterruptedException {
 
-      Job job = Job.getInstance( conf, "Initial Analysis - Job 1" );
+      Job job = Job.getInstance( conf, "Late Aircraft Analysis - Job 1" );
       job.setJarByClass( Driver.class );
       job.setNumReduceTasks( 1 );
 
@@ -57,7 +56,7 @@ public class Driver {
       job.setMapOutputValueClass( Text.class );
 
       job.setOutputKeyClass( Text.class );
-      job.setOutputValueClass( IntWritable.class );
+      job.setOutputValueClass( Text.class );
 
       MultipleInputs.addInputPath( job, new Path( args[ 0 ] ),
           TextInputFormat.class, Map.class );
@@ -82,7 +81,7 @@ public class Driver {
     }
     if ( args.length != 2 )
     {
-      System.err.println( "Invalid Argument Configurations - add / remove" );
+      System.err.println( "Invalid Argument Configurations - add / remove " + args.length  );
       System.exit( 0 );
     }
     int status = 0;
