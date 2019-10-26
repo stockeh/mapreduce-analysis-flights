@@ -83,7 +83,7 @@ case "$1" in
     ;;
     
 -4) CLASS_JOB="late"
-    FIRST_INPUT="/"${HDFS_DATA}"/main/19[8-9][0-9].csv"
+    FIRST_INPUT="/"${HDFS_DATA}"/main/200[3-8].csv"
     SECOND_INPUT=""
     hadoop_runner
     ;;
