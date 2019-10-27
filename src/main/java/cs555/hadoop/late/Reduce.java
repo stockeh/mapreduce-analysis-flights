@@ -16,7 +16,7 @@ import cs555.hadoop.util.DocumentUtilities;
 /**
  * Reducer class that takes the output from the mapper and organizes
  * the values accordingly.
- * 
+ *
  * @author stock
  *
  */
@@ -29,7 +29,7 @@ public class Reduce extends Reducer<Text, Text, Text, NullWritable> {
   private final Map<String, Integer> late = new HashMap<>();
 
   /**
-   * 
+   *
    */
   @Override
   protected void reduce(Text key, Iterable<Text> values, Context context)
@@ -96,7 +96,8 @@ public class Reduce extends Reducer<Text, Text, Text, NullWritable> {
     // NullWritable.get() );
 
     context.write( new Text(
-        "\n----Q7. DEST    N_LATE_DELAY ORIGIN    AVG_GLOBAL_DELAY_FLIGHTS  CONTRIB_LATE_DELAY" ),
+        "\n----Q7. DEST    N_LATE_DELAY ORIGIN  TOTAL_ARRIVAL_DELAYED_FLIGHTS "
+            + "AVG_GLOBAL_DELAY_FLIGHTS  CONTRIB_LATE_DELAY" ),
         NullWritable.get() );
 
     // Over each destination
@@ -124,7 +125,7 @@ public class Reduce extends Reducer<Text, Text, Text, NullWritable> {
 
           topLocations.put(
               flight.getValue().getArrivalDelayCount()
-                  / ( double ) e.getValue().getTotalFlightsFromOrigin(),
+                  / ( double ) e.getValue().getTotalArrivalDelayedFlights(),
               flight.getKey() );
 
           if ( topLocations.size() > 10 )
@@ -148,6 +149,8 @@ public class Reduce extends Reducer<Text, Text, Text, NullWritable> {
               new Text( sb.append( e.getKey() ).append( Constants.SEPERATOR )
                   .append( originLateDelayCount ).append( Constants.SEPERATOR )
                   .append( source ).append( Constants.SEPERATOR )
+                  .append( e.getValue().getTotalArrivalDelayedFlights() )
+                  .append( Constants.SEPERATOR )
                   .append( arrivalDelayContrib ).append( Constants.SEPERATOR )
                   .append( contrib_late_delay ).toString() ),
               NullWritable.get() );
@@ -163,9 +166,12 @@ public class Reduce extends Reducer<Text, Text, Text, NullWritable> {
 
     private int totalFlightsFromOrigin;
 
+    private int totalArrivalDelayedFlights;
+
     public Flight() {
       this.flight = new HashMap<>();
       this.totalFlightsFromOrigin = 0;
+      this.totalArrivalDelayedFlights = 0;
     }
 
     public HashMap<String, Delays> getFlight() {
@@ -178,6 +184,14 @@ public class Reduce extends Reducer<Text, Text, Text, NullWritable> {
 
     public int getTotalFlightsFromOrigin() {
       return totalFlightsFromOrigin;
+    }
+
+    public void incTotalArrivalDelayedFlights() {
+      ++totalArrivalDelayedFlights;
+    }
+
+    public int getTotalArrivalDelayedFlights() {
+      return totalArrivalDelayedFlights;
     }
 
     public void updateFlight(String source, int arrivalDelay) {
@@ -194,6 +208,7 @@ public class Reduce extends Reducer<Text, Text, Text, NullWritable> {
       if ( arrivalDelay > 0 )
       {
         delay.incArrivalDelayCount();
+        incTotalArrivalDelayedFlights();
       }
 
       incTotalFlightsFromOrigin();
