@@ -1,0 +1,220 @@
+1987	ORD	Chicago	135046
+1987	ATL	Hartsfield-Jackson Atlanta International	133092
+1987	DFW	Dallas/Fort Worth International	104310
+1987	LAX	Los Angeles International	91243
+1987	DEN	Denver International	87660
+1987	SFO	San Francisco International	70103
+1987	STL	St Louis Lambert International	64787
+1987	EWR	Newark Liberty International	62049
+1987	PHX	Phoenix Sky Harbor International	60082
+1987	PIT	Pittsburgh International	58061
+1988	ORD	Chicago	546260
+1988	ATL	Hartsfield-Jackson Atlanta International	520304
+1988	DFW	Dallas/Fort Worth International	437115
+1988	LAX	Los Angeles International	339395
+1988	DEN	Denver International	324744
+1988	SFO	San Francisco International	261656
+1988	STL	St Louis Lambert International	257641
+1988	PHX	Phoenix Sky Harbor International	243970
+1988	PIT	Pittsburgh International	237901
+1988	LGA	LaGuardia	228728
+1989	ORD	Chicago	528136
+1989	DFW	Dallas/Fort Worth International	461421
+1989	ATL	Hartsfield-Jackson Atlanta International	448626
+1989	LAX	Los Angeles International	326250
+1989	DEN	Denver International	277980
+1989	PHX	Phoenix Sky Harbor International	261235
+1989	STL	St Louis Lambert International	258135
+1989	SFO	San Francisco International	251595
+1989	DTW	Detroit Metro Wayne County	234588
+1989	PIT	Pittsburgh International	228712
+1990	ORD	Chicago	544122
+1990	ATL	Hartsfield-Jackson Atlanta International	540522
+1990	DFW	Dallas/Fort Worth International	482372
+1990	LAX	Los Angeles International	339296
+1990	PHX	Phoenix Sky Harbor International	277897
+1990	DEN	Denver International	276109
+1990	SFO	San Francisco International	259523
+1990	STL	St Louis Lambert International	255312
+1990	DTW	Detroit Metro Wayne County	242343
+1990	PIT	Pittsburgh International	236533
+1991	ORD	Chicago	531638
+1991	DFW	Dallas/Fort Worth International	491165
+1991	ATL	Hartsfield-Jackson Atlanta International	376405
+1991	LAX	Los Angeles International	313792
+1991	DEN	Denver International	276721
+1991	PHX	Phoenix Sky Harbor International	275462
+1991	SFO	San Francisco International	247072
+1991	CLT	Charlotte Douglas International	244990
+1991	STL	St Louis Lambert International	241005
+1991	DTW	Detroit Metro Wayne County	240721
+1992	ORD	Chicago	557156
+1992	DFW	Dallas/Fort Worth International	511566
+1992	ATL	Hartsfield-Jackson Atlanta International	405810
+1992	LAX	Los Angeles International	310909
+1992	DEN	Denver International	297117
+1992	PHX	Phoenix Sky Harbor International	273532
+1992	PIT	Pittsburgh International	268669
+1992	DTW	Detroit Metro Wayne County	250078
+1992	STL	St Louis Lambert International	248121
+1992	CLT	Charlotte Douglas International	248091
+1993	ORD	Chicago	578747
+1993	DFW	Dallas/Fort Worth International	525876
+1993	ATL	Hartsfield-Jackson Atlanta International	441558
+1993	DEN	Denver International	320677
+1993	LAX	Los Angeles International	303809
+1993	PHX	Phoenix Sky Harbor International	269098
+1993	STL	St Louis Lambert International	266511
+1993	DTW	Detroit Metro Wayne County	258931
+1993	PIT	Pittsburgh International	246024
+1993	MSP	Minneapolis-St Paul International	243553
+1994	ORD	Chicago	561461
+1994	DFW	Dallas/Fort Worth International	516523
+1994	ATL	Hartsfield-Jackson Atlanta International	443074
+1994	LAX	Los Angeles International	306453
+1994	STL	St Louis Lambert International	304409
+1994	DEN	Denver International	285526
+1994	PHX	Phoenix Sky Harbor International	280560
+1994	DTW	Detroit Metro Wayne County	276272
+1994	PIT	Pittsburgh International	262939
+1994	CLT	Charlotte Douglas International	259712
+1995	ORD	Chicago	586894
+1995	DFW	Dallas/Fort Worth International	536286
+1995	ATL	Hartsfield-Jackson Atlanta International	460955
+1995	LAX	Los Angeles International	359859
+1995	STL	St Louis Lambert International	349693
+1995	PHX	Phoenix Sky Harbor International	314313
+1995	DTW	Detroit Metro Wayne County	295180
+1995	MSP	Minneapolis-St Paul International	272855
+1995	CLT	Charlotte Douglas International	262837
+1995	DEN	Denver International	260649
+1996	ORD	Chicago	592481
+1996	DFW	Dallas/Fort Worth International	498718
+1996	ATL	Hartsfield-Jackson Atlanta International	483152
+1996	LAX	Los Angeles International	368236
+1996	STL	St Louis Lambert International	357035
+1996	PHX	Phoenix Sky Harbor International	326569
+1996	DTW	Detroit Metro Wayne County	309112
+1996	SFO	San Francisco International	271376
+1996	DEN	Denver International	263451
+1996	CLT	Charlotte Douglas International	262366
+1997	ORD	Chicago	595017
+1997	DFW	Dallas/Fort Worth International	502290
+1997	ATL	Hartsfield-Jackson Atlanta International	500386
+1997	LAX	Los Angeles International	376238
+1997	STL	St Louis Lambert International	354139
+1997	PHX	Phoenix Sky Harbor International	334031
+1997	DTW	Detroit Metro Wayne County	311160
+1997	SFO	San Francisco International	276381
+1997	MSP	Minneapolis-St Paul International	276179
+1997	DEN	Denver International	270405
+1998	ORD	Chicago	589806
+1998	ATL	Hartsfield-Jackson Atlanta International	510667
+1998	DFW	Dallas/Fort Worth International	488062
+1998	LAX	Los Angeles International	368207
+1998	STL	St Louis Lambert International	352031
+1998	PHX	Phoenix Sky Harbor International	341965
+1998	DTW	Detroit Metro Wayne County	306849
+1998	SFO	San Francisco International	279737
+1998	MSP	Minneapolis-St Paul International	273358
+1998	DEN	Denver International	272711
+1999	ORD	Chicago	596531
+1999	ATL	Hartsfield-Jackson Atlanta International	527343
+1999	DFW	Dallas/Fort Worth International	490180
+1999	LAX	Los Angeles International	383593
+1999	PHX	Phoenix Sky Harbor International	355391
+1999	STL	St Louis Lambert International	351390
+1999	DTW	Detroit Metro Wayne County	308369
+1999	SFO	San Francisco International	273947
+1999	DEN	Denver International	271588
+1999	IAH	George Bush Intercontinental/Houston	258986
+2000	ORD	Chicago	593639
+2000	ATL	Hartsfield-Jackson Atlanta International	530825
+2000	DFW	Dallas/Fort Worth International	493942
+2000	LAX	Los Angeles International	424269
+2000	PHX	Phoenix Sky Harbor International	377835
+2000	STL	St Louis Lambert International	339202
+2000	DTW	Detroit Metro Wayne County	307012
+2000	MSP	Minneapolis-St Paul International	294563
+2000	DEN	Denver International	274598
+2000	SFO	San Francisco International	270084
+2001	ORD	Chicago	682636
+2001	DFW	Dallas/Fort Worth International	624361
+2001	ATL	Hartsfield-Jackson Atlanta International	503163
+2001	LAX	Los Angeles International	450019
+2001	PHX	Phoenix Sky Harbor International	368631
+2001	STL	St Louis Lambert International	324477
+2001	DTW	Detroit Metro Wayne County	297522
+2001	MSP	Minneapolis-St Paul International	284955
+2001	BOS	Logan International	266032
+2001	DEN	Denver International	265184
+2002	ORD	Chicago	654782
+2002	DFW	Dallas/Fort Worth International	562709
+2002	ATL	Hartsfield-Jackson Atlanta International	463826
+2002	PHX	Phoenix Sky Harbor International	347880
+2002	LAX	Los Angeles International	286099
+2002	MSP	Minneapolis-St Paul International	283074
+2002	DTW	Detroit Metro Wayne County	281357
+2002	STL	St Louis Lambert International	265157
+2002	DEN	Denver International	240662
+2002	IAH	George Bush Intercontinental/Houston	239372
+2003	ATL	Hartsfield-Jackson Atlanta International	737402
+2003	ORD	Chicago	733432
+2003	DFW	Dallas/Fort Worth International	665349
+2003	LAX	Los Angeles International	372719
+2003	IAH	George Bush Intercontinental/Houston	370343
+2003	PHX	Phoenix Sky Harbor International	339794
+2003	MSP	Minneapolis-St Paul International	289667
+2003	DEN	Denver International	283732
+2003	DTW	Detroit Metro Wayne County	279675
+2003	SLC	Salt Lake City International	251192
+2004	ATL	Hartsfield-Jackson Atlanta International	835061
+2004	ORD	Chicago	752376
+2004	DFW	Dallas/Fort Worth International	688856
+2004	LAX	Los Angeles International	465353
+2004	CVG	Cincinnati/Northern Kentucky International	415948
+2004	IAH	George Bush Intercontinental/Houston	404126
+2004	PHX	Phoenix Sky Harbor International	340445
+2004	DEN	Denver International	310407
+2004	DTW	Detroit Metro Wayne County	293193
+2004	SLC	Salt Lake City International	277594
+2005	ATL	Hartsfield-Jackson Atlanta International	863478
+2005	ORD	Chicago	675450
+2005	DFW	Dallas/Fort Worth International	615489
+2005	LAX	Los Angeles International	461844
+2005	IAH	George Bush Intercontinental/Houston	424095
+2005	CVG	Cincinnati/Northern Kentucky International	417073
+2005	DEN	Denver International	365766
+2005	PHX	Phoenix Sky Harbor International	348986
+2005	SLC	Salt Lake City International	321336
+2005	LAS	McCarran International	279415
+2006	ATL	Hartsfield-Jackson Atlanta International	812800
+2006	ORD	Chicago	747535
+2006	DFW	Dallas/Fort Worth International	602475
+2006	LAX	Los Angeles International	467688
+2006	DEN	Denver International	464841
+2006	IAH	George Bush Intercontinental/Houston	448065
+2006	PHX	Phoenix Sky Harbor International	430171
+2006	LAS	McCarran International	308716
+2006	SLC	Salt Lake City International	284342
+2006	EWR	Newark Liberty International	269727
+2007	ATL	Hartsfield-Jackson Atlanta International	827775
+2007	ORD	Chicago	751569
+2007	DFW	Dallas/Fort Worth International	594849
+2007	DEN	Denver International	481694
+2007	PHX	Phoenix Sky Harbor International	422170
+2007	LAX	Los Angeles International	414309
+2007	IAH	George Bush Intercontinental/Houston	400870
+2007	DTW	Detroit Metro Wayne County	355006
+2007	MSP	Minneapolis-St Paul International	311706
+2007	LAS	McCarran International	308203
+2008	ATL	Hartsfield-Jackson Atlanta International	273964
+2008	ORD	Chicago	236019
+2008	DFW	Dallas/Fort Worth International	186118
+2008	DEN	Denver International	156801
+2008	LAX	Los Angeles International	146994
+2008	PHX	Phoenix Sky Harbor International	138801
+2008	IAH	George Bush Intercontinental/Houston	125086
+2008	LAS	McCarran International	113086
+2008	DTW	Detroit Metro Wayne County	112356
+2008	SLC	Salt Lake City International	96795
